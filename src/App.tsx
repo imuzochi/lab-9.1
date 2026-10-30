@@ -1,121 +1,111 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import AlertBox from './components/AlertBox/AlertBox'
+import ProductDisplay from './components/ProductDisplay/ProductDisplay'
+import UserProfileCard from './components/UserProfileCard/UserProfileCard'
+import type { Product, User } from './types'
 import './App.css'
 
+const user: User = {
+  id: 'user-42',
+  name: 'Jordan Lee',
+  email: 'jordan.lee@example.com',
+  role: 'Workspace member',
+}
+
+const product: Product = {
+  id: 'product-7',
+  name: 'Everyday Backpack',
+  price: 64.99,
+  description:
+    'A lightweight everyday backpack with a padded laptop sleeve and room for all your essentials.',
+  imageUrl:
+    'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=960&q=85',
+  inStock: true,
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [notice, setNotice] = useState<{
+    type: 'success' | 'info'
+    message: string
+  } | null>(null)
+
+  function handleEdit(userId: string) {
+    setNotice({
+      type: 'info',
+      message: `Opening profile settings for ${userId}.`,
+    })
+  }
+
+  function handleAddToCart(productId: string) {
+    setNotice({
+      type: 'success',
+      message: `${product.name} (${productId}) was added to your cart.`,
+    })
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <main className="showcase">
+      <header className="showcase__header">
+        <p className="showcase__eyebrow">React component library</p>
+        <h1>Component composition</h1>
+        <p className="showcase__intro">
+          Components can be composed together by passing data and callbacks as
+          props, and by nesting custom content inside their children slots.
+        </p>
+      </header>
 
-      <div className="ticks"></div>
+      {notice && (
+        <AlertBox
+          type={notice.type}
+          message={notice.message}
+          onClose={() => setNotice(null)}
+        />
+      )}
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <div className="showcase__grid">
+        <section className="showcase__section" aria-labelledby="account-heading">
+          <div className="showcase__section-heading">
+            <p className="showcase__eyebrow">Nested profile content</p>
+            <h2 id="account-heading">Your account</h2>
+          </div>
+          <UserProfileCard
+            user={user}
+            showEmail
+            showRole
+            onEdit={handleEdit}
+          >
+            <AlertBox
+              type="info"
+              message="Your profile is visible to your workspace team."
+            />
+          </UserProfileCard>
+        </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        <section className="showcase__section" aria-labelledby="shop-heading">
+          <div className="showcase__section-heading">
+            <p className="showcase__eyebrow">Nested product content</p>
+            <h2 id="shop-heading">Featured product</h2>
+          </div>
+          <ProductDisplay
+            product={product}
+            showDescription
+            showStockStatus
+            onAddToCart={handleAddToCart}
+          >
+            <p className="showcase__delivery-note">
+              Free shipping on orders over $50.
+            </p>
+          </ProductDisplay>
+        </section>
+      </div>
+
+      <footer className="showcase__footer">
+        <p>
+          Try <strong>Edit</strong> or <strong>Add to cart</strong> to see
+          callbacks update the shared alert above.
+        </p>
+      </footer>
+    </main>
   )
 }
 
