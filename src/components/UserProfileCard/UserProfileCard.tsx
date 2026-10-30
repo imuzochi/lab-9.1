@@ -18,7 +18,10 @@ function UserProfileCard({
             alt={`${user.name}'s avatar`}
           />
         ) : (
-          <div className="user-profile-card__avatar user-profile-card__avatar--placeholder" aria-hidden="true">
+          <div
+            className="user-profile-card__avatar user-profile-card__avatar--placeholder"
+            aria-hidden="true"
+          >
             {user.name
               .split(/\s+/)
               .filter(Boolean)
@@ -44,7 +47,9 @@ function UserProfileCard({
       </div>
 
       {showEmail && <p className="user-profile-card__email">{user.email}</p>}
-      {children && <div className="user-profile-card__children">{children}</div>}
+      {children != null && (
+        <div className="user-profile-card__children">{children}</div>
+      )}
     </article>
   )
 }

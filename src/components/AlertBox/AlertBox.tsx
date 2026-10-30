@@ -12,7 +12,9 @@ function AlertBox({ type, message, onClose, children }: AlertBoxProps) {
     >
       <div className="alert-box__content">
         <p className="alert-box__message">{message}</p>
-        {children && <div className="alert-box__children">{children}</div>}
+        {children != null && (
+          <div className="alert-box__children">{children}</div>
+        )}
       </div>
       {onClose && (
         <button

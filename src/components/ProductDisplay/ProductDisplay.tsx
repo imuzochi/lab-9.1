@@ -40,7 +40,9 @@ function ProductDisplay({
             {product.inStock ? 'In stock' : 'Out of stock'}
           </p>
         )}
-        {children && <div className="product-display__children">{children}</div>}
+        {children != null && (
+          <div className="product-display__children">{children}</div>
+        )}
         {onAddToCart && (
           <button
             className="product-display__add-to-cart"
